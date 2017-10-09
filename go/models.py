@@ -6,63 +6,48 @@ from django.db import models
 # Create your models here.
 
 
-class Usuario(models.Models):
+class Usuario(models.Model):
     """
     """
 
-    nome = models.CharField(
-        label='Nome',
-        max_lenght=60,
-        null=False,
-        blank=False
-    )
+    nome = models.CharField(max_length=60)
 
-    email = models.EmailField(
-        label='Email',
-        max_lenght=100,
-        null=False,
-        blank=False
-    )
+    email = models.EmailField(max_length=100)
 
-    senha = models.CharField(
-        label='Senha',
-        max_lenght=50,
-        null=False,
-        blank=False
-    )
+    senha = models.CharField(max_length=50)
 
-    professor = models.BooleanField(
-        default=False,
-        null=True,
-        blank=True
-    )
+    professor = models.BooleanField(default=False)
 
-class Turma(models.Models):
+class Turma(models.Model):
     """
     """
 
-    nome = models.CharField(
-        label='Nome',
-        max_lenght=60,
-        null=False,
-        blank=False
-    )
+    nome = models.CharField(max_length=60)
 
-    horario = models.DateTimeField(
-        null=False,
-        blank=False
-    )
+    horario = models.DateTimeField()
 
-    professor = models.ForeignKey(
-        Usuario,
-        blank=False,
-        null=False
-    )
+    professor = models.ForeignKey(Usuario)
 
-class Empresa(models.Models):
+class Empresa(models.Model):
     """
     """
 
-class Atividade(models.Models):
+    nome = models.CharField(max_length=60)
+
+    turma = models.ForeignKey(Turma)
+
+    descricao = models.TextField()
+
+class Atividade(models.Model):
     """
     """
+
+    titulo = models.CharField(max_length=60)
+
+    descricao = models.TextField()
+
+    turma = models.ForeignKey(Turma)
+
+    professor = models.ForeignKey(Usuario)
+
+    nota = models.FloatField()
