@@ -18,6 +18,9 @@ class Usuario(models.Model):
 
     professor = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return self.nome
+
 class Turma(models.Model):
     """
     """
@@ -28,6 +31,9 @@ class Turma(models.Model):
 
     professor = models.ForeignKey(Usuario)
 
+    def __unicode__(self):
+        return self.nome
+
 class Empresa(models.Model):
     """
     """
@@ -37,6 +43,9 @@ class Empresa(models.Model):
     turma = models.ForeignKey(Turma)
 
     descricao = models.TextField()
+
+    def __unicode__(self):
+        return self.nome
 
 class Atividade(models.Model):
     """
@@ -51,3 +60,6 @@ class Atividade(models.Model):
     professor = models.ForeignKey(Usuario)
 
     nota = models.FloatField()
+
+    def __unicode__(self):
+        return self.nome
