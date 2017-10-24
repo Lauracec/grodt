@@ -27,12 +27,25 @@ class Turma(models.Model):
 
     nome = models.CharField(max_length=60)
 
-    horario = models.DateTimeField()
-
     professor = models.ForeignKey(Usuario)
+
+    data_inicio = models.DateField(
+        'Data de Início',
+        null=True,
+        blank=True
+    )
+
+    data_fim = models.DateField(
+        'Data de Encerramento',
+        null=True,
+        blank=True
+    )
+
+    horario = models.TimeField()
 
     def __unicode__(self):
         return self.nome
+
 
 class Empresa(models.Model):
     """
@@ -44,8 +57,11 @@ class Empresa(models.Model):
 
     descricao = models.TextField()
 
+    integrantes = models.ManyToManyField(Usuario)
+
     def __unicode__(self):
         return self.nome
+
 
 class Atividade(models.Model):
     """
@@ -57,9 +73,12 @@ class Atividade(models.Model):
 
     turma = models.ForeignKey(Turma)
 
-    professor = models.ForeignKey(Usuario)
+    # professor = models.ForeignKey(Usuario)
 
-    nota = models.FloatField()
+    nota = models.FloatField(
+        null=True,
+        blank=True
+    )
 
     def __unicode__(self):
-        return self.nome
+        return self.titulo

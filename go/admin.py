@@ -10,13 +10,14 @@ class UsuarioAdmin(admin.ModelAdmin):
     list_display = (u'nome', u'email', u'professor')
 
 class TurmaAdmin(admin.ModelAdmin):
-    list_display = (u'nome', u'horario', u'professor')
+    list_display = (u'nome', u'professor', u'data_inicio', u'data_fim',
+        u'horario')
 
 class EmpresaAdmin(admin.ModelAdmin):
     list_display = (u'nome', u'turma', u'descricao')
 
 class AtividadeAdmin(admin.ModelAdmin):
-    list_display = (u'titulo', u'descricao', u'turma', u'professor', u'nota')
+    list_display = (u'titulo', u'descricao', u'turma', u'nota')
 
 admin.site.register(models.Usuario, UsuarioAdmin)
 admin.site.register(models.Turma, TurmaAdmin)
