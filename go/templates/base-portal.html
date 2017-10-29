@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block conteudo %}
+
+{% include 'menu-topo.html' %}
+
+<div class="container-fluid">
+  <div class="row">
+    {% include 'menu-lateral.html' %}    
+
+    <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+      {% block conteudo_portal %}
+      {% endblock %}
+    </main>
+    
+  </div>
+</div>
+
+{% endblock %}

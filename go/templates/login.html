@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block conteudo %}
+
+<div class="cover">
+  <form class="login center col-lg-4 col-md-6 col-xs-12" action="{% url 'inicio_portal' %}">
+    <img src="{% static 'img/logo.png' %}" alt="GRODT" class="logo">
+    <div class="form-group">
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Usuário">
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Senha">
+    </div>
+    <!--<div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input">
+        Check me out
+      </label>
+    </div>-->
+    <button type="submit" class="btn btn-primary btn-block">Autenticar</button>
+  </form>
+</div>
+
+
+{% endblock %}
