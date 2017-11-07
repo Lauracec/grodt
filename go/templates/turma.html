@@ -2,6 +2,11 @@
 
 {% block conteudo_portal %}
 
+{% if not turma %}
+<h1>Turma</h1>
+<p><i>Você não faz parte de uma turma.</i></p>
+{% else %}
+
 <h1>{{ turma.nome }}</h1>
 <p>Professor(a): {{ turma.professor }}</p>
 <p>Data de início/fim: De {{ turma.data_inicio }} a {{ turma.data_fim }}</p>
@@ -16,12 +21,14 @@
     </thead>
     {% for aluno in turma.alunos.all %}
     <tr>
-      <td>{{ aluno.nome }}</td>
+      <td>{{ aluno.get_full_name }}</td>
       <td>{{ aluno.email }}</td>
     </tr>
     {% endfor %}
   </table>
 </div>
+
+{% endif %}
 
 
 {% endblock %}

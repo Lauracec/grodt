@@ -1,28 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.contrib.auth.models import User
 
 from django.db import models
 
 # Create your models here.
 
 
-class Usuario(models.Model):
+class Usuario(User):
     """
     """
-
-    nome = models.CharField(max_length=60)
-
-    email = models.EmailField(max_length=100)
-
-    senha = models.CharField(max_length=50)
 
     professor = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.nome
+        return self.username
 
     class Meta:
-        ordering = ['nome']
+        ordering = ['username']
 
 class Turma(models.Model):
     """

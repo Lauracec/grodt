@@ -29,12 +29,17 @@ body, html {
     margin-bottom: 20px;
 }
 
+.dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
 /*
  * Base structure
  */
 
 /* Move down content because we have a fixed navbar that is 3.5rem tall */
-body {
+.has-header {
   padding-top: 3.5rem;
 }
 

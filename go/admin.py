@@ -7,7 +7,7 @@ from go import models
 # Register your models here.
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = (u'nome', u'email', u'professor')
+    list_display = (u'username', u'email', u'professor',)
 
 class TurmaAdmin(admin.ModelAdmin):
     list_display = (u'nome', u'horario')

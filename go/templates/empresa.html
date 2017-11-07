@@ -1,6 +1,21 @@
 {% extends 'base-portal.html' %}
 
+{% load has_group %}
+
 {% block conteudo_portal %}
+
+{% if request.user|has_group:"Aluno" %}
+{% if not empresa %}
+<h1>Empresa</h1>
+<p><i>Você não faz parte de uma empresa.</i></p>
+
+{% if request.user|has_group:"Aluno" %}
+<a href="" class="btn btn-primary">
+  Criar empresa
+</a>
+{% endif %}
+
+{% else %}
 
 <h1>{{ empresa.nome }}</h1>
 
@@ -15,12 +30,30 @@
     </thead>
     {% for aluno in empresa.alunos.all %}
     <tr>
-      <td>{{ aluno.nome }}</td>
+      <td>{{ aluno.get_full_name }}</td>
       <td>{{ aluno.email }}</td>
     </tr>
     {% endfor %}
   </table>
 </div>
+
+{% endif %}
+{% else %}
+
+<h1>Empresas</h1>
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+      <th>Empresa</th>
+    </thead>
+    {% for empresa in empresas %}
+    <tr>
+      <td>{{ empresa.nome }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
 
 <!--<hr>
 

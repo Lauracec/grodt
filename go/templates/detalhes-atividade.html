@@ -1,5 +1,7 @@
 {% extends 'base-portal.html' %}
 
+{% load has_group %}
+
 {% block conteudo_portal %}
 
 <h1>{{ atividade.titulo }}</h1>
@@ -25,7 +27,7 @@
 <hr>
 <h3>Comentários</h3>
 {% for comentario in comentarios %}
-<p>{{ comentario.autor }}</p>
+<p>{{ comentario.autor.get_full_name }}</p>
 <p>{{ comentario.comentario }}</p>
 <hr>
 {% empty %}
@@ -34,6 +36,7 @@
 
 <hr>
 
+{% if request.user|has_group:"Professor" %}
 <h3>Enviar comentário</h3>
 
 
@@ -48,6 +51,7 @@
 
   <button type="submit" class="btn btn-primary">Enviar</button>
 </form>
+{% endif %}
 
 
 {% endblock %}

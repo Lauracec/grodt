@@ -25,8 +25,10 @@ SECRET_KEY = '3jo&ird-4f)d+3v112=&3!z^s&68sk3nu^(sr9s*cp_fu^4td&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [u'localhost', u'172.18.100.76']
+ALLOWED_HOSTS = [u'localhost', u'172.18.100.76', u'172.18.100.56']
 
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/portal'
 
 # Application definition
 

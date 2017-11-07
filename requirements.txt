@@ -1,10 +1,10 @@
-adium-theme-ubuntu==0.3.4
+#adium-theme-ubuntu==0.3.4
 backports.shutil-get-terminal-size==1.0.0
 decorator==4.1.2
 Django==1.11.5
 ecdsa==0.13
 enum34==1.1.6
-gyp==0.1
+#gyp==0.1
 ipython==5.5.0
 ipython-genutils==0.2.0
 mysql-connector-python==2.0.4

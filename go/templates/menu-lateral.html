@@ -1,10 +1,12 @@
+{% load has_group %}
+
 <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
   <ul class="nav nav-pills flex-column">
     <li class="nav-item">
       <a class="nav-link{% if 'turma' in request.path %} active{% endif %}" href="{% url 'turma' %}">Minha Turma <span class="sr-only">(current)</span></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if 'empresa' in request.path %} active{% endif %}" href="{% url 'empresa' %}">Minha Empresa</a>
+      <a class="nav-link{% if 'empresa' in request.path %} active{% endif %}" href="{% url 'empresa' %}">{% if request.user|has_group:"Professor" %}Empresas{% else %}Minha Empresa{% endif %}</a>
     </li>
     <li class="nav-item">
       <a class="nav-link{% if 'atividades' in request.path %} active{% endif %}" href="{% url 'atividades' %}">Atividades</a>
