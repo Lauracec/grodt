@@ -1,7 +1,12 @@
-{% extends 'base-portal.html' %}
+{% extends 'base_portal.html' %}
+
+{% block title %}Atividades{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Atividades</li>
+{% endblock %}
 
 {% block conteudo_portal %}
-
 
 <h1>Atividades</h1>
 
@@ -14,11 +19,17 @@
     <thead>
       <th>Atividade</th>
       <th>Data de entrega</th>
+      <th>Status</th>
     </thead>
     {% for atividade in atividades %}
     <tr>
       <td><a href="{% url 'detalhes_atividade' pk=atividade.pk %}">{{ atividade.titulo }}</a></td>
-      <td>{{ atividade.data_entrega }}</td>
+      <td>{{ atividade.data_entrega|date:'d/m/Y' }}, até {{ atividade.data_entrega|time:'H:i' }}</td>
+      {% if atividade.aberta %}
+      <td><span style="color:green">Aberta</span></td>
+      {% else %}
+      <td><span style="color:red">Encerrada</span></td>
+      {% endif %}
     </tr>
     {% endfor %}
   </table>

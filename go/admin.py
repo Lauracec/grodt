@@ -18,13 +18,21 @@ class EmpresaAdmin(admin.ModelAdmin):
 class AtividadeAdmin(admin.ModelAdmin):
     list_display = (u'titulo', u'descricao', u'turma')
 
+class TrabalhoAtividadeAdmin(admin.ModelAdmin):
+    list_display = (u'atividade', u'empresa')
+
 class ComentarioAdmin(admin.ModelAdmin):
     list_display = (u'comentario', u'autor')
+
+class NotaAdmin(admin.ModelAdmin):
+    list_display = (u'trabalho_atividade', u'nota')
 
 admin.site.register(models.Usuario, UsuarioAdmin)
 admin.site.register(models.Turma, TurmaAdmin)
 admin.site.register(models.Empresa, EmpresaAdmin)
 admin.site.register(models.Atividade, AtividadeAdmin)
+admin.site.register(models.TrabalhoAtividade, TrabalhoAtividadeAdmin)
 admin.site.register(models.Comentario, ComentarioAdmin)
+admin.site.register(models.Nota, NotaAdmin)
 
 admin.autodiscover()

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.utils import timezone
 from django.contrib.auth.models import User
 
 from django.db import models
@@ -19,6 +20,7 @@ class Usuario(User):
     class Meta:
         ordering = ['username']
 
+
 class Turma(models.Model):
     """
     """
@@ -36,6 +38,7 @@ class Turma(models.Model):
     def __unicode__(self):
         return self.nome
 
+
 class Empresa(models.Model):
     """
     """
@@ -50,6 +53,7 @@ class Empresa(models.Model):
 
     def __unicode__(self):
         return self.nome
+
 
 class Atividade(models.Model):
     """
@@ -66,14 +70,38 @@ class Atividade(models.Model):
     def __unicode__(self):
         return self.titulo
 
+    def aberta(self):
+        return self.data_entrega > timezone.now()
+
+
+class TrabalhoAtividade(models.Model):
+
+    atividade = models.ForeignKey(Atividade)
+
+    usuario = models.ForeignKey(Usuario)
+
+    empresa = models.ForeignKey(Empresa)
+
+    data_upload = models.DateTimeField(auto_now_add=True)
+
+    arquivo = models.FileField(upload_to='media/')
+
+
 class Comentario(models.Model):
     """
     """
-
     comentario = models.TextField()
 
-    data = models.DateTimeField()
+    data = models.DateTimeField(auto_now_add=True)
 
     autor = models.ForeignKey(Usuario)
 
-    atividade = models.ForeignKey(Atividade)
+    trabalho_atividade = models.ForeignKey(TrabalhoAtividade)
+
+
+class Nota(models.Model):
+    """
+    """
+    nota = models.FloatField(null=True,blank=True)
+
+    trabalho_atividade = models.ForeignKey(TrabalhoAtividade)

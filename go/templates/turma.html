@@ -1,4 +1,10 @@
-{% extends 'base-portal.html' %}
+{% extends 'base_portal.html' %}
+
+{% block title %}Minha Turma{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Minha Turma</li>
+{% endblock %}
 
 {% block conteudo_portal %}
 
@@ -8,7 +14,7 @@
 {% else %}
 
 <h1>{{ turma.nome }}</h1>
-<p>Professor(a): {{ turma.professor }}</p>
+<p>Professor(a): {{ turma.professor.get_full_name }}</p>
 <p>Data de início/fim: De {{ turma.data_inicio }} a {{ turma.data_fim }}</p>
 <p>Horário: {{ turma.horario }}</p>
 

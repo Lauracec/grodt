@@ -1,0 +1,202 @@
+{% extends 'base_portal.html' %}
+
+{% load has_group %}
+
+{% block title %}Atividade{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item">
+  <a href="{% url 'atividades' %}">Atividades</a>
+</li>
+<li class="breadcrumb-item active">
+  {{ atividade.titulo }}
+</li>
+{% endblock %}
+
+{% block conteudo_portal %}
+
+<h1>{{ atividade.titulo }}</h1>
+<p>Descrição: {{ atividade.descricao }}</p>
+<p>Data de entrega: {{ atividade.data_entrega|date:'d/m/Y' }}</p>
+
+
+{% if not atividade.aberta %}
+<div class="alert alert-info" role="alert">
+  Esta atividade está encerrada.
+</div>
+{% endif %}
+
+{% if request.user|has_group:"Aluno" %}
+
+{% if trabalho_entregue %}
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+      <th>Trabalho</th>
+      <th>Postado por</th>
+      <th>Data entregue</th>
+      <th>Nota</th>
+    </thead>
+    <tr>
+      <td><a href="{{ trabalho_entregue.arquivo.url }}" target="_blank">Download</a></td>
+      <td>{{ trabalho_entregue.usuario }}</a></td>
+      <td>{{ trabalho_entregue.data_upload|date:'d/m/Y' }}</a></td>
+      <td>{{ nota.nota|default:'-' }}</td>
+    </tr>
+  </table>
+</div>
+{% else %}
+<div class="alert alert-warning" role="alert">
+  <strong>Atenção!</strong> Sua empresa ainda não realizou esta atividade.
+</div>
+
+{% if not atividade.aberta %}
+<h3>Enviar trabalho</h3>
+
+<form enctype="multipart/form-data" method="post">
+  {% csrf_token %}
+
+  {% for field in form_trabalho.visible_fields %}
+    <div class="form-group">
+      {{ field }}
+    </div>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-primary">Enviar</button>
+</form>
+{% endif %}
+{% endif %}
+
+<hr>
+
+<h3>Comentários</h3>
+{% for comentario in comentarios %}
+<p>{{ comentario.autor.get_full_name }}</p>
+<p>{{ comentario.comentario }}</p>
+<hr>
+{% empty %}
+<p><i>Nenhum comentário.</i></p>
+{% endfor %}
+
+{% endif %}
+
+{% if request.user|has_group:"Professor" %}
+<h3>Trabalhos entregues</h3>
+{% for trabalho in trabalhos %}
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+      <th>Trabalho</th>
+      <th>Empresa</th>
+      <th>Postado por</th>
+      <th>Data entregue</th>
+      <th>Nota</th>
+      <th>Comentários</th>
+    </thead>
+    <tr>
+      <td><a href="{{ trabalho.arquivo.url }}" target="_blank">Download</a></td>
+      <td>{{ trabalho.empresa }}</a></td>
+      <td>{{ trabalho.usuario.get_full_name }}</a></td>
+      <td>{{ trabalho.data_upload|date:'d/m/Y' }}</a></td>
+      <td><a href="#" data-toggle="modal" data-trabalho="{{ trabalho.pk }}" data-target="#modal_nota">{{ trabalho.get_nota|default:'Atribuir nota' }}</a></td>
+      <td><a href="#" data-toggle="modal" data-trabalho="{{ trabalho.pk }}" data-target="#modal_comentario">Comentar</a></td>
+    </tr>
+  </table>
+</div>
+<hr>
+{% empty %}
+<p><i>Nenhum trabalho.</i></p>
+{% endfor %}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_comentario">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enviar comentário</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+
+          <input type="hidden" id="comentario_trabalho_pk" name="comentario_trabalho_pk">
+
+          {% for field in form_comentario.visible_fields %}
+            <div class="form-group">
+              {{ field }}
+            </div>
+          {% endfor %}          
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_nota">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Atribuir nota</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+
+          <input type="hidden" id="nota_trabalho_pk" name="nota_trabalho_pk">
+
+          {% for field in form_nota.visible_fields %}
+            <div class="form-group">
+              {{ field }}
+            </div>
+          {% endfor %}          
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+  $('#modal_nota').on('show.bs.modal', function (e) {
+    pk = e.relatedTarget.dataset.trabalho;
+    $('#nota_trabalho_pk').val(pk);
+  });
+
+  $('#modal_comentario').on('show.bs.modal', function (e) {
+    pk = e.relatedTarget.dataset.trabalho;
+    $('#comentario_trabalho_pk').val(pk);
+  });
+</script>
+{% endblock %}
+
+<!--
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+      <th>Atividade</th>
+      <th>Data de entrega</th>
+    </thead>
+    {% for atividade in atividades %}
+    <tr>
+      <td><a href="{% url 'detalhes_atividade' pk=atividade.pk %}">{{ atividade.titulo }}</a></td>
+      <td>{{ atividade.data_entrega }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+-->

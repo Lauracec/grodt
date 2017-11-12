@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block conteudo %}
+
+{% include 'menu.html' %}
+
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'inicio_portal' %}">Início</a>
+      </li>
+      {% block breadcrumb %}{% endblock %}      
+    </ol>
+    <div class="row">
+      <div class="col-12">
+        {% block conteudo_portal %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+  <!-- /.container-fluid-->
+  <!-- /.content-wrapper-->
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fa fa-angle-up"></i>
+  </a>
+</div>
+
+{% endblock %}

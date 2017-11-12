@@ -15,7 +15,7 @@ def login(request):
 
 @login_required
 def portal(request):
-    return render(request, 'portal-inicio.html')
+    return render(request, 'portal_inicio.html')
 
 @login_required
 def turma(request):
@@ -55,20 +55,59 @@ def atividades(request):
 @login_required
 def detalhes_atividade(request, pk):
     atividade = Atividade.objects.get(pk=pk)
-    comentarios = Comentario.objects.filter(atividade__pk=pk)    
-    autor = Usuario.objects.get(pk=request.user.pk)
-    if request.method == 'POST':
-        form = ComentarioForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.atividade = atividade
-            post.autor = Usuario.objects.get(pk=request.user.pk)
-            post.data = timezone.now()
+    comentarios = Comentario.objects.filter(trabalho_atividade__pk=pk)
+    trabalhos = TrabalhoAtividade.objects.filter(atividade__pk=pk)
+    try:
+        nota = Nota.objects.get(trabalho_atividade__pk=pk)
+    except:
+        nota = ''
+    try:
+        trabalho_entregue = trabalhos.get(empresa__alunos=request.user.pk)
+    except:
+        trabalho_entregue = ''
+    
+    usuario = Usuario.objects.get(pk=request.user.pk)
+
+    if 'comentario' in request.POST:
+        form_comentario = ComentarioForm(request.POST)
+        if form_comentario.is_valid():
+            post = form_comentario.save(commit=False)
+            post.trabalho_atividade = TrabalhoAtividade.objects.get(pk=request.POST['comentario_trabalho_pk'])
+            #post.autor = Usuario.objects.get(pk=request.user.pk)
+            post.autor = usuario
             post.save()
-    form = ComentarioForm()
+    form_comentario = ComentarioForm()
+
+    if 'arquivo' in request.POST:
+        form_trabalho = TrabalhoAtividadeForm(request.POST, request.FILES)
+
+        if form_trabalho.is_valid():
+            post = form_trabalho.save(commit=False)
+            post.atividade = atividade
+            #post.usuario = Usuario.objects.get(pk=request.user.pk)
+            post.usuario = usuario
+            post.empresa = Empresa.objects.get(alunos__pk=request.user.pk)
+            post.arquivo = request.FILES['arquivo']
+            post.save()
+    form_trabalho = TrabalhoAtividadeForm()
+
+    if 'nota' in request.POST:
+        form_nota = NotaTrabalhoAtividadeForm(request.POST)
+
+        if form_nota.is_valid():
+            post = form_nota.save(commit=False)            
+            post.trabalho_atividade = TrabalhoAtividade.objects.get(pk=request.POST['nota_trabalho_pk'])
+            post.save()
+    form_nota = NotaTrabalhoAtividadeForm()
+
     return render(request, 
-                  'detalhes-atividade.html',
+                  'detalhes_atividade.html',
                   {'atividade': atividade,
+                   'trabalhos': trabalhos,
                    'comentarios': comentarios,
-                   'form': form})
+                   'form_comentario': form_comentario,
+                   'form_trabalho': form_trabalho,
+                   'form_nota': form_nota,
+                   'trabalho_entregue': trabalho_entregue,
+                   'nota': nota})
 
