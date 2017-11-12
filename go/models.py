@@ -73,6 +73,9 @@ class Atividade(models.Model):
     def aberta(self):
         return self.data_entrega > timezone.now()
 
+    class Meta:
+        ordering = ['-data_entrega']
+
 
 class TrabalhoAtividade(models.Model):
 

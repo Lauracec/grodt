@@ -1,5 +1,9 @@
 {% extends 'base_portal.html' %}
 
+{% load has_group %}
+
+{% load i18n %}
+
 {% block title %}Atividades{% endblock %}
 
 {% block breadcrumb %}
@@ -8,7 +12,13 @@
 
 {% block conteudo_portal %}
 
+{% if request.user|has_group:"Professor" %}
+  <button class="float-right btn btn-primary" data-toggle="modal" data-target="#modal_atividade">Criar atividade</button>
+{% endif %}
+
 <h1>Atividades</h1>
+
+
 
 {% if not atividades %}
 <p><i>Nenhuma atividade encontrada.</i></p>
@@ -36,6 +46,29 @@
 </div>
 
 {% endif %}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_atividade">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Criar atividade</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+
+          {{ form.as_p }}         
+          <button type="submit" class="btn btn-primary">Criar</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 
 
 {% endblock %}

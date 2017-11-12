@@ -6,6 +6,20 @@ class AtividadeForm(forms.ModelForm):
 
     turma = forms.ModelChoiceField(queryset=Turma.objects.all())
 
+    data_entrega = forms.DateField(widget = forms.SelectDateWidget)
+
+    class Meta:
+        model = Atividade
+        fields = ('titulo', 'descricao', 'turma', 'data_entrega')
+        widgets = {
+            'titulo': forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
+            'descricao': forms.Textarea(
+                attrs={'class': 'form-control'}
+            )
+        }
+
 
 class ComentarioForm(forms.ModelForm):
 

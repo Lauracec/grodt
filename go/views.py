@@ -43,6 +43,12 @@ def empresa(request):
 
 @login_required
 def atividades(request):
+
+    if request.method == 'POST':
+        form = AtividadeForm(request.POST)
+        if form.is_valid():
+            form.save()
+    form = AtividadeForm()
     try:
         turma = Turma.objects.get(participantes__pk=request.user.pk)
         atividades = Atividade.objects.filter(turma=turma)
@@ -50,7 +56,8 @@ def atividades(request):
         atividades = ''
     return render(request, 
                   'atividades.html',
-                  {'atividades': atividades})
+                  {'atividades': atividades,
+                   'form': form})
 
 @login_required
 def detalhes_atividade(request, pk):

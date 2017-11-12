@@ -50,7 +50,7 @@
   <strong>Atenção!</strong> Sua empresa ainda não realizou esta atividade.
 </div>
 
-{% if not atividade.aberta %}
+{% if atividade.aberta %}
 <h3>Enviar trabalho</h3>
 
 <form enctype="multipart/form-data" method="post">
