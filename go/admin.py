@@ -10,7 +10,8 @@ class UsuarioAdmin(admin.ModelAdmin):
     list_display = (u'username', u'email', u'professor',)
 
 class TurmaAdmin(admin.ModelAdmin):
-    list_display = (u'nome', u'horario')
+    list_display = (u'nome', u'professor', u'data_inicio', u'data_fim',
+        u'horario')
 
 class EmpresaAdmin(admin.ModelAdmin):
     list_display = (u'nome', u'turma', u'descricao')

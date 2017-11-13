@@ -35,6 +35,20 @@ class Turma(models.Model):
 
     participantes = models.ManyToManyField(Usuario)
 
+    data_inicio = models.DateField(
+        'Data de Início',
+        null=True,
+        blank=True
+    )
+
+    data_fim = models.DateField(
+        'Data de Encerramento',
+        null=True,
+        blank=True
+    )
+
+    horario = models.TimeField()
+
     def __unicode__(self):
         return self.nome
 
