@@ -25,7 +25,7 @@ def turma(request):
         turma.alunos = turma.participantes.filter(professor=False)
     except:
         turma = ''
-    return render(request, 
+    return render(request,
                   'turma.html',
                   {'turma': turma})
 
@@ -36,7 +36,7 @@ def empresa(request):
     except:
         empresa = ''
     empresas = Empresa.objects.all()
-    return render(request, 
+    return render(request,
                   'empresa.html',
                   {'empresa': empresa,
                    'empresas': empresas})
@@ -54,7 +54,7 @@ def atividades(request):
         atividades = Atividade.objects.filter(turma=turma)
     except:
         atividades = ''
-    return render(request, 
+    return render(request,
                   'atividades.html',
                   {'atividades': atividades,
                    'form': form})
@@ -72,7 +72,7 @@ def detalhes_atividade(request, pk):
         trabalho_entregue = trabalhos.get(empresa__alunos=request.user.pk)
     except:
         trabalho_entregue = ''
-    
+
     usuario = Usuario.objects.get(pk=request.user.pk)
 
     if 'comentario' in request.POST:
@@ -85,7 +85,7 @@ def detalhes_atividade(request, pk):
             post.save()
     form_comentario = ComentarioForm()
 
-    if 'arquivo' in request.POST:
+    if 'arquivo' in request.FILES:
         form_trabalho = TrabalhoAtividadeForm(request.POST, request.FILES)
 
         if form_trabalho.is_valid():
@@ -102,12 +102,12 @@ def detalhes_atividade(request, pk):
         form_nota = NotaTrabalhoAtividadeForm(request.POST)
 
         if form_nota.is_valid():
-            post = form_nota.save(commit=False)            
+            post = form_nota.save(commit=False)
             post.trabalho_atividade = TrabalhoAtividade.objects.get(pk=request.POST['nota_trabalho_pk'])
             post.save()
     form_nota = NotaTrabalhoAtividadeForm()
 
-    return render(request, 
+    return render(request,
                   'detalhes_atividade.html',
                   {'atividade': atividade,
                    'trabalhos': trabalhos,
@@ -117,4 +117,3 @@ def detalhes_atividade(request, pk):
                    'form_nota': form_nota,
                    'trabalho_entregue': trabalho_entregue,
                    'nota': nota})
-
