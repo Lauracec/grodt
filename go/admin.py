@@ -28,6 +28,12 @@ class ComentarioAdmin(admin.ModelAdmin):
 class NotaAdmin(admin.ModelAdmin):
     list_display = (u'trabalho_atividade', u'nota')
 
+class ConquistaAdmin(admin.ModelAdmin):
+    list_display = (u'titulo', u'descricao', 'pontos_atribuidos')
+
+class NivelAdmin(admin.ModelAdmin):
+    list_display = (u'titulo', u'descricao', 'pontos_minimos')
+
 admin.site.register(models.Usuario, UsuarioAdmin)
 admin.site.register(models.Turma, TurmaAdmin)
 admin.site.register(models.Empresa, EmpresaAdmin)
@@ -35,5 +41,7 @@ admin.site.register(models.Atividade, AtividadeAdmin)
 admin.site.register(models.TrabalhoAtividade, TrabalhoAtividadeAdmin)
 admin.site.register(models.Comentario, ComentarioAdmin)
 admin.site.register(models.Nota, NotaAdmin)
+admin.site.register(models.Conquista, ConquistaAdmin)
+admin.site.register(models.Nivel, NivelAdmin)
 
 admin.autodiscover()

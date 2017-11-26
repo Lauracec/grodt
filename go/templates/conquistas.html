@@ -1,0 +1,78 @@
+{% extends 'base_portal.html' %}
+
+{% load has_group %}
+
+{% block title %}Conquistas{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Conquistas da empresa</li>
+{% endblock %}
+
+{% block conteudo_portal %}
+
+<h1>Conquistas da empresa</h1>
+
+<div class="row">
+  <div class="col-xl-4 col-sm-6 mb-4">
+    <div class="card text-white bg-warning o-hidden h-100">
+      <div class="card-body">
+        <div class="card-body-icon">
+          <i class="fa fa-fw fa-trophy"></i>
+        </div>
+        <div class="mr-5">{{ niveis.0.titulo }}</div>
+        <span class="small text-white">{{ niveis.0.descricao }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-4 col-sm-6 mb-4">
+    <div class="card text-white bg-warning o-hidden h-100">
+      <div class="card-body">
+        <div class="card-body-icon">
+          <i class="fa fa-fw fa-bar-chart"></i>
+        </div>
+        <div class="mr-5">Pontos *</div>
+        <span class="small text-white">{{ pontos }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-4 col-sm-6 mb-4">
+    <div class="card text-white bg-warning o-hidden h-100">
+      <div class="card-body">
+        <div class="mr-5">Progresso para o próximo nível</div>
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ niveis.progresso }}%" aria-valuenow="{{ pontos }}" aria-valuemin="0" aria-valuemax="{{ niveis.1.pontos_minimos }}"></div>          
+        </div>
+        <span>{{ pontos }}</span>
+        <span class="float-right">{{ niveis.1.pontos_minimos }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">  
+  {% for conquista in conquistas %}
+  <div class="col-xl-3 col-sm-6 mb-3">
+    <div class="card text-white o-hidden h-100 bg-gray 
+      {% if conquista.pk == 1 and conquista_1 or conquista.pk == 2 and conquista_2 or conquista.pk == 3 and conquista_3 or conquista.pk == 4 and conquista_4 %}
+      bg-success
+      {% endif %}
+      ">
+      <div class="card-body">
+        <div class="card-body-icon">
+          <i class="fa fa-fw fa-{{ conquista.icone }}"></i>
+        </div>
+        <div class="mr-5">{{ conquista.titulo }}</div>
+        <span class="small text-white">+ {{ conquista.pontos_atribuidos }} pontos
+      </div>
+      <div class="card-footer text-white clearfix small z-1">
+        {{ conquista.descricao }}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+  <p><em>* É adicionado 50 pontos para cada atividade entregue.</em></p>
+
+{% endblock %}

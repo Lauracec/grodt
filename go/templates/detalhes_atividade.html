@@ -36,14 +36,39 @@
       <th>Postado por</th>
       <th>Data entregue</th>
       <th>Nota</th>
+      <th>Comentários</th>
     </thead>
     <tr>
       <td><a href="{{ trabalho_entregue.arquivo.url }}" target="_blank">Download</a></td>
       <td>{{ trabalho_entregue.usuario }}</a></td>
       <td>{{ trabalho_entregue.data_upload|date:'d/m/Y' }}</a></td>
-      <td>{{ nota.nota|default:'-' }}</td>
+      <td>{{ trabalho_entregue.nota_set.first.nota|default:'-' }}</td>
+      <td>{% if trabalho_entregue.comentario_set.all %}<a href="#" data-toggle="modal" data-target="#modal_comentario_trabalho_entregue">Comentários</a>{% else %}-</td>{% endif %}
     </tr>
   </table>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_comentario_trabalho_entregue">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Comentários</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% for comentario in trabalho_entregue.comentario_set.all %}
+        <p><strong>{{ comentario.autor.get_full_name }}</strong>
+        <br/><em>Postado em {{ comentario.data|date:'d/m/Y' }} às {{ comentario.data|date:'H:i' }}</em></p>
+        <p>{{ comentario.comentario }}</p>
+        <hr>
+        {% empty %}
+        <p><i>Nenhum comentário.</i></p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </div>
 {% else %}
 <div class="alert alert-warning" role="alert">
@@ -64,23 +89,14 @@
 
   <button type="submit" class="btn btn-primary">Enviar</button>
 </form>
+
 {% endif %}
 {% endif %}
 
-<hr>
-
-<h3>Comentários</h3>
-{% for comentario in comentarios %}
-<p>{{ comentario.autor.get_full_name }}</p>
-<p>{{ comentario.comentario }}</p>
-<hr>
-{% empty %}
-<p><i>Nenhum comentário.</i></p>
-{% endfor %}
+<hr> 
 
 {% endif %}
 
-{% if request.user|has_group:"Professor" %}
 <h3>Trabalhos entregues</h3>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -89,20 +105,27 @@
       <th>Empresa</th>
       <th>Postado por</th>
       <th>Data entregue</th>
+      {% if request.user|has_group:"Professor" %}
       <th>Nota</th>
       <th>Comentários</th>
+      {% endif %}
     </thead>
     {% for trabalho in trabalhos %}
+      {% if trabalho.empresa.pk != trabalho_entregue.empresa.pk %}
         <tr>
           <td><a href="{{ trabalho.arquivo.url }}" target="_blank">Download</a></td>
           <td>{{ trabalho.empresa }}</a></td>
           <td>{{ trabalho.usuario.get_full_name }}</a></td>
           <td>{{ trabalho.data_upload|date:'d/m/Y' }}</a></td>
-          <td><a href="#" data-toggle="modal" data-trabalho="{{ trabalho.pk }}" data-target="#modal_nota">{{ trabalho.get_nota|default:'Atribuir nota' }}</a></td>
-          <td><a href="#" data-toggle="modal" data-trabalho="{{ trabalho.pk }}" data-target="#modal_comentario{{ trabalho.pk }}">Comentar</a></td>
+          {% if request.user|has_group:"Professor" %}
+          <td><a href="#" data-toggle="modal" data-target="#modal_nota_{{ trabalho.pk }}">{{ trabalho.nota_set.first.nota|default:'Atribuir nota' }}</a></td>
+          <td><a href="#" data-toggle="modal" data-target="#modal_comentario_{{ trabalho.pk }}">Comentar</a></td>
+          {% endif %}
        </tr>
+      {% endif %}
 
-       <div class="modal fade modal-comentario" tabindex="-1" role="dialog" id="modal_comentario{{ trabalho.pk }}">
+       {% if request.user|has_group:"Professor" %}
+       <div class="modal fade modal-comentario" tabindex="-1" role="dialog" id="modal_comentario_{{ trabalho.pk }}">
          <div class="modal-dialog" role="document">
            <div class="modal-content">
              <div class="modal-header">
@@ -115,14 +138,12 @@
                <form method="post">
                  {% csrf_token %}
 
-                 {% for comentario in comentarios %}
-                      {% if comentario.trabalho_atividade_id == trabalho.pk %}
-                          <p>{{ comentario.autor.get_full_name }}</p>
-                          <p>{{ comentario.comentario }}</p>
-                      {% endif %}
+                 {% for comentario in trabalho.comentario_set.all %}
+                    <p>{{ comentario.autor.get_full_name }}</p>
+                    <p>{{ comentario.comentario }}</p>
                  {% endfor %}
 
-                 <input type="hidden" id="comentario_trabalho_pk" name="comentario_trabalho_pk">
+                 <input type="hidden" id="comentario_trabalho_pk" name="comentario_trabalho_pk" value="{{ trabalho.pk }}">
                  {% for field in form_comentario.visible_fields %}
                    <div class="form-group">
                      {{ field }}
@@ -131,79 +152,43 @@
                  <button type="submit" class="btn btn-primary">Enviar</button>
                </form>
              </div>
-             <div class="modal-footer">
+           </div>
+         </div>
+       </div>
+
+       <div class="modal fade" tabindex="-1" role="dialog" id="modal_nota_{{ trabalho.pk }}">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title">Atribuir nota</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <form method="post">
+                 {% csrf_token %}
+
+                 <input type="hidden" id="nota_trabalho_pk" name="nota_trabalho_pk" value="{{ trabalho.pk }}">
+
+                 {% for field in form_nota.visible_fields %}
+                   <div class="form-group">
+                     {{ field }}
+                   </div>
+                 {% endfor %}
+                 <button type="submit" class="btn btn-primary">Enviar</button>
+               </form>
              </div>
            </div>
          </div>
        </div>
+       {% endif %}
 
     {% empty %}
         <p><i>Nenhum trabalho.</i></p>
     {% endfor %}
   </table>
 </div>
-<hr>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="modal_nota">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Atribuir nota</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post">
-          {% csrf_token %}
-
-          <input type="hidden" id="nota_trabalho_pk" name="nota_trabalho_pk">
-
-          {% for field in form_nota.visible_fields %}
-            <div class="form-group">
-              {{ field }}
-            </div>
-          {% endfor %}
-          <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
-      </div>
-      <div class="modal-footer">
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-
 
 {% endblock %}
 
-{% block js %}
-<script>
-  $('#modal_nota').on('show.bs.modal', function (e) {
-    pk = e.relatedTarget.dataset.trabalho;
-    $('#nota_trabalho_pk').val(pk);
-  });
-
-  $('.modal-comentario').on('show.bs.modal', function (e) {
-    pk = e.relatedTarget.dataset.trabalho;
-    $('#comentario_trabalho_pk').val(pk);
-  });
-</script>
-{% endblock %}
-
-<!--
-<div class="table-responsive">
-  <table class="table table-striped table-hover">
-    <thead>
-      <th>Atividade</th>
-      <th>Data de entrega</th>
-    </thead>
-    {% for atividade in atividades %}
-    <tr>
-      <td><a href="{% url 'detalhes_atividade' pk=atividade.pk %}">{{ atividade.titulo }}</a></td>
-      <td>{{ atividade.data_entrega }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
--->

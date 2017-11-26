@@ -35,20 +35,6 @@ class Turma(models.Model):
 
     participantes = models.ManyToManyField(Usuario)
 
-    data_inicio = models.DateField(
-        'Data de Início',
-        null=True,
-        blank=True
-    )
-
-    data_fim = models.DateField(
-        'Data de Encerramento',
-        null=True,
-        blank=True
-    )
-
-    horario = models.TimeField()
-
     def __unicode__(self):
         return self.nome
 
@@ -122,3 +108,24 @@ class Nota(models.Model):
     nota = models.FloatField(null=True,blank=True)
 
     trabalho_atividade = models.ForeignKey(TrabalhoAtividade)
+
+
+class Conquista(models.Model):
+    titulo = models.CharField(max_length=60)
+
+    descricao = models.TextField()
+
+    icone = models.CharField(max_length=60, null=True, blank=True)
+
+    pontos_atribuidos = models.IntegerField()
+
+
+class Nivel(models.Model):
+    titulo = models.CharField(max_length=60)
+
+    descricao = models.TextField()
+
+    pontos_minimos = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = 'Níveis'

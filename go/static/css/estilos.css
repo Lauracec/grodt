@@ -98,3 +98,30 @@ h1 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
 }
+
+.card-pontuacao {
+  float: right;  
+}
+
+.card-pontuacao .card-body {
+  padding: 0.8rem;
+}
+
+.card-pontuacao .card-body-icon {
+  top: -10px;
+  right: -15px;
+  font-size:3rem;
+}
+
+.card-pontuacao .fa-fw {
+  width: 1.28571429em;
+}
+
+.card-pontuacao h5.mr-5 {
+  margin-right: 2rem!important;
+  margin-bottom: 0;
+}
+
+.bg-gray {
+  background-color: #ccc;
+}
