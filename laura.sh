@@ -12,3 +12,4 @@ echo '▒▒▒▒█▄▄█░░█▄▄█░░░░░░█▄▄█�
 
 cd /django/envs/ucsvirtual/bin/;
 . ./activate;
+exec bash
